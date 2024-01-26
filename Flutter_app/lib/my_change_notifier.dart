@@ -10,7 +10,7 @@ class MyChangeNotifier extends ChangeNotifier {
 
 //get all data
 
-  Future<void> fetchData() async {
+  Future<void> fetchData(BuildContext context) async {
     var url = Uri.parse('http://localhost:8081/api/users/allusers');
 
     try {
@@ -21,21 +21,20 @@ class MyChangeNotifier extends ChangeNotifier {
         List<User> userList = data.map((json) => User.fromJson(json)).toList();
 
         // Update the state with the fetched data
-       
-          users = userList;
-        
+
+        users = userList;
       } else {
         // If the server did not return a 200 OK response,
         // throw an exception.
-        throw Exception('Failed to load data');
+        showSnackBar('Failed to load data', context);
       }
     } catch (e) {
-      print('Error: $e');
+      showSnackBar('$e', context);
     }
   }
 
-  Future<void> login(String username,String password,BuildContext context) async {
-
+  Future<void> login(
+      String username, String password, BuildContext context) async {
     var url = Uri.parse('http://localhost:8081/api/users/login');
     var response = await http.post(
       url,
@@ -56,14 +55,14 @@ class MyChangeNotifier extends ChangeNotifier {
 
       // Check if the user is an admin
       bool isAdmin = userData['admin'];
-      checkAdmin(isAdmin,context);
+      checkAdmin(isAdmin, context);
     } else {
       // Login failed
       showSnackBar('Invalid username or password', context);
     }
   }
 
-  void checkAdmin(bool isAdmin,BuildContext context) {
+  void checkAdmin(bool isAdmin, BuildContext context) {
     if (isAdmin) {
       Navigator.push(
         context,
@@ -81,8 +80,8 @@ class MyChangeNotifier extends ChangeNotifier {
     }
   }
 
-  Future<void> signUp(String username,String password,BuildContext context) async {
-
+  Future<void> signUp(
+      String username, String password, BuildContext context) async {
     var url = Uri.parse('http://localhost:8081/api/users/signup');
     var response = await http.post(
       url,
@@ -99,7 +98,7 @@ class MyChangeNotifier extends ChangeNotifier {
     if (response.statusCode == 201) {
       // Signup successful
       showSnackBar('Sign Up successful!', context);
-    } else if (response.statusCode == 204) {
+    } else if (response.statusCode == 404) {
       // Username already taken
       showSnackBar(
           'Username is already taken. Please choose another.', context);
@@ -109,7 +108,8 @@ class MyChangeNotifier extends ChangeNotifier {
     }
   }
 
-void saveUser(BuildContext context,
+  void saveUser(
+      BuildContext context,
       User user,
       TextEditingController usernameController,
       TextEditingController passwordController,
@@ -138,10 +138,12 @@ void saveUser(BuildContext context,
 
       if (response.statusCode == 200) {
         showSnackBar('User information updated!', context);
-        fetchData();
-      } else {
+        fetchData(context);
+      } else if (response.statusCode == 404) {
         showSnackBar(
             'Username is already taken. Please choose another.', context);
+      } else {
+        showSnackBar('Update failed. Please try again.', context);
       }
     } else {
       showSnackBar(
@@ -157,25 +159,24 @@ void saveUser(BuildContext context,
     }
   }
 
-  void deleteUser(User user,BuildContext context) async {
+  void deleteUser(User user, BuildContext context) async {
     // Make a DELETE request to delete the user
     var url = Uri.parse('http://localhost:8081/api/users/${user.id}');
     var response = await http.delete(url);
 
     if (response.statusCode == 204) {
-     showSnackBar('User deleted!', context);
-      fetchData();
+      showSnackBar('User deleted!', context);
+      fetchData(context);
     } else {
       showSnackBar('Failed to delete user', context);
     }
   }
 
-   void showSnackBar(String message, BuildContext context) {
+  void showSnackBar(String message, BuildContext context) {
     final snackBar = SnackBar(
       content: Text(message),
       duration: const Duration(seconds: 2),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
-  
 }

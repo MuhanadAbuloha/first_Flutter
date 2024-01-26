@@ -6,9 +6,9 @@ import jakarta.persistence.Entity;
 
 @Entity
 public class User extends PanacheEntity {
-    String username;
-    String password;
-    boolean admin;
+    private String username;
+    private String password;
+    private boolean admin;
 
     public static User findByName(String username){
         return find("username", username).firstResult();

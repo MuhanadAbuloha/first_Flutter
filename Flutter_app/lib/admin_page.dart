@@ -13,7 +13,7 @@ class _AdminPageState extends State<AdminPage> {
   void initState() {
     super.initState();
     // Fetch data from API when the page is initialized
-    context.read<MyChangeNotifier>().fetchData();
+    context.read<MyChangeNotifier>().fetchData(context);
   }
 
   @override

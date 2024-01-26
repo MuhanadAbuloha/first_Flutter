@@ -8,7 +8,6 @@ import jakarta.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Path("/api/users")
 public class UserResource {
@@ -36,7 +35,7 @@ public class UserResource {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
         }else {
-            return Response.noContent().build();
+             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
@@ -62,13 +61,12 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(@PathParam("id") Long id, User updatedUser) {
 
-        Optional<User> optionalUser = User.findByIdOptional(id);
+        User dbUser = User.findById(id);
 
-        if (optionalUser.isPresent()) {
-            User dbUser = optionalUser.get();
-
+        if(User.findByName(updatedUser.getUsername())==null){
             if (Objects.nonNull(updatedUser.getUsername())) {
                 dbUser.setUsername(updatedUser.getUsername());
+
             }
             if (Objects.nonNull(updatedUser.getPassword())) {
                 dbUser.setPassword(updatedUser.getPassword());
@@ -82,12 +80,11 @@ public class UserResource {
                 return Response.ok(dbUser).build();
             } else {
                 return Response.status(Response.Status.BAD_REQUEST).build();
+            }}else{
+                return Response.status(Response.Status.NOT_FOUND).build();
             }
 
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).build();
         }
-    }
 
     @DELETE
     @Path("/{id}")
