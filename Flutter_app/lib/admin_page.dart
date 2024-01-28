@@ -11,21 +11,28 @@ class AdminPage extends StatefulWidget {
 class AdminPageState extends State<AdminPage> {
   @override
   void initState() {
+    context.read<MyChangeNotifier>().fetchData(context);
     super.initState();
     // Fetch data from API when the page is initialized
-    context.read<MyChangeNotifier>().fetchData(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Admin Page'),
+      appBar: AppBar(
+        title: const Text('Admin Page'),
+      ),
+      body: Center(
+        child: SizedBox(
+          height: 400,
+          width: 700,
+          child: ListView(
+            scrollDirection: Axis.vertical,
+            children: [containerTable()],
+          ),
         ),
-        body: Center(
-          child: SingleChildScrollView(
-              scrollDirection: Axis.vertical, child: containerTable()),
-        ));
+      ),
+    );
   }
 
   Container containerTable() {
