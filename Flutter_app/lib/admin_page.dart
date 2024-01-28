@@ -5,10 +5,10 @@ import 'my_change_notifier.dart';
 
 class AdminPage extends StatefulWidget {
   @override
-  _AdminPageState createState() => _AdminPageState();
+  AdminPageState createState() => AdminPageState();
 }
 
-class _AdminPageState extends State<AdminPage> {
+class AdminPageState extends State<AdminPage> {
   @override
   void initState() {
     super.initState();
