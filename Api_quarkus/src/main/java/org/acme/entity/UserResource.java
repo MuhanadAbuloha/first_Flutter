@@ -9,12 +9,12 @@ import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 
-@Path("/api/users")
+@Path(SystemPaths.MAIN)
 public class UserResource {
 
 
     @GET
-    @Path("/allusers")
+    @Path(SystemPaths.ALLUSERS)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUsers() {
         List<User> userList = User.listAll();
@@ -22,7 +22,7 @@ public class UserResource {
     }
 
     @POST
-    @Path("/signup")
+    @Path(SystemPaths.SIGNUP)
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -41,12 +41,14 @@ public class UserResource {
 
 
     @POST
-    @Path("/login")
+    @Path(SystemPaths.LOGIN)
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response Login(LoginRequest Login) {  //note errors
-        User user = User.findByUsernameAndPassword(Login.getUsername(), Login.getPassword());
+    public Response Login(LoginRequest login) {  //note errors
+        String userName = login.getUsername();
+        String password = login.getPassword();
+        User user = User.findByUsernameAndPassword(userName, password);
         if (user!=null) {
             return Response.ok(user).build();
         } else {

@@ -108,7 +108,7 @@ class MyChangeNotifier extends ChangeNotifier {
     }
   }
 
-  void saveUser(
+  void updateUser(
       BuildContext context,
       User user,
       TextEditingController usernameController,

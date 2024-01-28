@@ -35,7 +35,8 @@ class _AdminPageState extends State<AdminPage> {
         borderRadius: BorderRadius.circular(10.0), // Set the border radius
       ),
       child: ClipRRect(
-          borderRadius: BorderRadius.circular(10.0), //make the background color radius like border
+          borderRadius: BorderRadius.circular(
+              10.0), //make the background color radius like border
           clipBehavior: Clip.antiAlias,
           child: datatable()),
     );
@@ -47,14 +48,15 @@ class _AdminPageState extends State<AdminPage> {
         return Colors.cyan;
       }),
       dividerThickness: 2.0,
-      columns: [                    //header coulms
+      columns: [
+        //header coulms
         datacoulmn('ID'),
         datacoulmn('Username'),
         datacoulmn('Password'),
         datacoulmn('Admin'),
         datacoulmn('Actions')
       ],
-      rows: context                               
+      rows: context
           .read<MyChangeNotifier>()
           .users
           .map((user) => buildDataRow(user))
@@ -131,7 +133,7 @@ class _AdminPageState extends State<AdminPage> {
   ) {
     return ElevatedButton(
       onPressed: () {
-        context.read<MyChangeNotifier>().saveUser(
+        context.read<MyChangeNotifier>().updateUser(
               context,
               user,
               usernameController,
