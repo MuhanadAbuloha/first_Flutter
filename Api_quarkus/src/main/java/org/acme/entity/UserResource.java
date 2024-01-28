@@ -64,17 +64,22 @@ public class UserResource {
     public Response updateUser(@PathParam("id") Long id, User updatedUser) {
 
         User dbUser = User.findById(id);
-
         if(User.findByName(updatedUser.getUsername())==null){
-            if (Objects.nonNull(updatedUser.getUsername())) {
-                dbUser.setUsername(updatedUser.getUsername());
+
+        String userName = updatedUser.getUsername();
+        String password = updatedUser.getPassword();
+        boolean isAdmin=updatedUser.getAdmin();
+
+
+            if (Objects.nonNull(userName)) {
+                dbUser.setUsername(userName);
 
             }
-            if (Objects.nonNull(updatedUser.getPassword())) {
-                dbUser.setPassword(updatedUser.getPassword());
+            if (Objects.nonNull(password)) {
+                dbUser.setPassword(password);
             }
-            if (Objects.nonNull(updatedUser.getAdmin())) {
-            dbUser.setAdmin(updatedUser.getAdmin());
+            if (Objects.nonNull(isAdmin)) {
+            dbUser.setAdmin(isAdmin);
             }
 
             dbUser.persist();
